@@ -205,6 +205,9 @@ const ProyectosProvider = ({ children }) => {
         },
       };
       const { data } = await clienteAxios.post("/tareas", tarea, config);
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = [...proyectoActualizado.tareas, data];
+      setProyecto(proyectoActualizado);
 
       setAlerta({});
       setModalFormularioTarea(false);
@@ -276,11 +279,13 @@ const ProyectosProvider = ({ children }) => {
         msg: data.msg,
         error: false,
       });
+      const proyectoActualizado = { ...proyecto };
+      proyectoActualizado.tareas = proyectoActualizado.tareas.filter(
+        (tareaState) => tareaState._id !== tarea._id
+      );
+      setProyecto(proyectoActualizado);
 
       setModalEliminarTarea(false);
-
-      //socket
-      socket.emit("eliminar tarea", tarea);
       setTarea({});
       setTimeout(() => {
         setAlerta({});
@@ -428,20 +433,8 @@ const ProyectosProvider = ({ children }) => {
     setBuscador(!buscador);
   };
 
-  //socket io
-  const submitTareasProyecto = (tarea) => {
-    const proyectoActualizado = { ...proyecto };
-    proyectoActualizado.tareas = [...proyectoActualizado.tareas, tarea];
-    setProyecto(proyectoActualizado);
-  };
 
-  const eliminarTareaProyecto = (tarea) => {
-    const proyectoActualizado = { ...proyecto };
-    proyectoActualizado.tareas = proyectoActualizado.tareas.filter(
-      (tareaState) => tareaState._id !== tarea._id
-    );
-    setProyecto(proyectoActualizado);
-  };
+
 
   const cerrarSesionProyectos = () => {
     setProyectos([]);
@@ -478,7 +471,6 @@ const ProyectosProvider = ({ children }) => {
         buscador,
         handleBuscador,
         submitTareasProyecto,
-        eliminarTareaProyecto,
         cerrarSesionProyectos,
       }}
     >

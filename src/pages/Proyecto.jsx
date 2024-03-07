@@ -8,9 +8,7 @@ import ModalEliminarTarea from "../components/ModalEliminarTarea";
 import ModalEliminarColaborador from "../components/ModalEliminarColaborador";
 import Tarea from "../components/Tarea";
 import Colaborador from "../components/Colaborador";
-import io from "socket.io-client";
 
-let socket;
 
 const Proyecto = () => {
   const params = useParams();
@@ -20,8 +18,6 @@ const Proyecto = () => {
     cargando,
     handleModalTarea,
     alerta,
-    submitTareasProyecto,
-    eliminarTareaProyecto,
   } = useProyectos();
 
   const admin = useAdmin();
@@ -31,24 +27,7 @@ const Proyecto = () => {
     obtenerProyecto(params.id);
   }, []);
 
-  useEffect(() => {
-    socket = io(import.meta.env.VITE_BACKEND_URL);
-    socket.emit("abrir proyecto", params.id);
-  }, []);
 
-  useEffect(() => {
-    socket.on("tarea agregada", (tareaNueva) => {
-      if (tareaNueva.proyecto === proyecto._id) {
-        submitTareasProyecto(tareaNueva);
-      }
-    });
-
-    socket.on("tarea eliminada", (tareaEliminada) => {
-      if (tareaEliminada.proyecto === proyecto._id) {
-        eliminarTareaProyecto(tareaEliminada);
-      }
-    });
-  });
 
   const { nombre } = proyecto;
 
