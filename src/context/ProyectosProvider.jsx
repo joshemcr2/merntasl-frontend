@@ -2,9 +2,7 @@ import { useState, useEffect, createContext } from "react";
 import clienteAxios from "../config/clienteAxios";
 import { useNavigate } from "react-router-dom";
 import useAuth from "../hooks/useAuth";
-import io from "socket.io-client";
 
-let socket;
 
 const ProyectosContext = createContext();
 
@@ -44,9 +42,7 @@ const ProyectosProvider = ({ children }) => {
     obtenerProyectos();
   }, [auth]);
 
-  useEffect(() => {
-    socket = io(import.meta.env.VITE_BACKEND_URL);
-  }, []);
+
 
   const mostrarAlerta = (alerta) => {
     setAlerta(alerta);
@@ -212,8 +208,6 @@ const ProyectosProvider = ({ children }) => {
       setAlerta({});
       setModalFormularioTarea(false);
 
-      //socket io
-      socket.emit("nueva tarea", data);
     } catch (error) {
       console.log(error);
     }
@@ -470,7 +464,6 @@ const ProyectosProvider = ({ children }) => {
         completarTarea,
         buscador,
         handleBuscador,
-        submitTareasProyecto,
         cerrarSesionProyectos,
       }}
     >
